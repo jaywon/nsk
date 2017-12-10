@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+import argparse
+import sys
+from nsktools import *
+
+# List of available tools
+available_tools = ['browser', 'ipmap', 'portscan', 'report', 'sysinfo']
+
+# Map available tools to a dictionary
+tool_options = {
+   'sysinfo': sysinfo,
+   'report': report,
+   'browser': browser,
+   'ipmap': ipmap,
+   'portscan': portscan
+}
+
+# Setup parser options and arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('tool', help='Specify which NSK tool you would like to use...',
+                    choices=available_tools)
+parser.add_argument('--output', help='Write output to a file')
+parser.add_argument('--verbose', help='Increase noise', action='store_true')
+
+# Parse command line arguments
+args = parser.parse_args()
+
+# Check verbose flag
+verbose = args.verbose
+
+# Attempt to invoke tool directly or handle exception if input is invalid
+try:
+    tool_options[args.tool](verbose)
+except:
+    print("Unexpected error:", sys.exc_info()[0])
+    print('Unsupported tool. Try again :P')
